@@ -1,3 +1,5 @@
 venv/
 gpt2model/
 __pycache__/
+log/
+*.pid
