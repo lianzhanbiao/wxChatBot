@@ -5,10 +5,19 @@ from datetime import datetime
 from transformers import GPT2LMHeadModel
 from transformers import BertTokenizerFast
 import torch.nn.functional as F
-from predict_arg import predict_arg
 
 PAD = '[PAD]'
 pad_id = 0
+
+device = 'cpu'
+temperature = 1 # 生成的temperature
+topk = 8
+topp = 0
+vocab_path = "/home/lighthouse/WorkSpace/wxChatBot/vocab/vocab.txt"
+model_path = "/home/lighthouse/WorkSpace/wxChatBot/gpt2model/"
+repetition_penalty = 1.0
+max_len = 25 # 每个utterance的最大长度,超过指定长度则进行截断
+max_history_len = 3 # dialogue history的最大长度
 
 
 def top_k_top_p_filtering(logits, top_k=0, top_p=0.0, filter_value=-float('Inf')):
@@ -43,13 +52,9 @@ def top_k_top_p_filtering(logits, top_k=0, top_p=0.0, filter_value=-float('Inf')
 
 
 def predict(text, dialog):
-    args =  predict_arg()
-    # 当用户使用GPU,并且GPU可用时
-    args.cuda = torch.cuda.is_available() and not args.no_cuda
-    device = 'cuda' if args.cuda else 'cpu'
-    os.environ["CUDA_VISIBLE_DEVICES"] = args.device
-    tokenizer = BertTokenizerFast(vocab_file=args.vocab_path, sep_token="[SEP]", pad_token="[PAD]", cls_token="[CLS]")
-    model = GPT2LMHeadModel.from_pretrained(args.model_path)
+    # os.environ["CUDA_VISIBLE_DEVICES"] = "0"
+    tokenizer = BertTokenizerFast(vocab_file=vocab_path, sep_token="[SEP]", pad_token="[PAD]", cls_token="[CLS]")
+    model = GPT2LMHeadModel.from_pretrained(model_path)
     model = model.to(device)
     model.eval()
 
@@ -60,24 +65,24 @@ def predict(text, dialog):
     history.append(text_ids)
     input_ids = [tokenizer.cls_token_id]  # 每个input以[CLS]为开头
 
-    for history_id, history_utr in enumerate(history[-args.max_history_len:]):
+    for history_id, history_utr in enumerate(history[-max_history_len:]):
         input_ids.extend(history_utr)
         input_ids.append(tokenizer.sep_token_id)
     input_ids = torch.tensor(input_ids).long().to(device)
     input_ids = input_ids.unsqueeze(0)
     response = []  # 根据context，生成的response
     # 最多生成max_len个token
-    for _ in range(args.max_len):
+    for _ in range(max_len):
         outputs = model(input_ids=input_ids)
         logits = outputs.logits
         next_token_logits = logits[0, -1, :]
         # 对于已生成的结果generated中的每个token添加一个重复惩罚项，降低其生成概率
         for id in set(response):
-            next_token_logits[id] /= args.repetition_penalty
-        next_token_logits = next_token_logits / args.temperature
+            next_token_logits[id] /= repetition_penalty
+        next_token_logits = next_token_logits / temperature
         # 对于[UNK]的概率设为无穷小，也就是说模型的预测结果不可能是[UNK]这个token
         next_token_logits[tokenizer.convert_tokens_to_ids('[UNK]')] = -float('Inf')
-        filtered_logits = top_k_top_p_filtering(next_token_logits, top_k=args.topk, top_p=args.topp)
+        filtered_logits = top_k_top_p_filtering(next_token_logits, top_k=topk, top_p=topp)
         # torch.multinomial表示从候选集合中无放回地进行抽取num_samples个元素，权重越高，抽到的几率越高，返回元素的下标
         next_token = torch.multinomial(F.softmax(filtered_logits, dim=-1), num_samples=1)
         if next_token == tokenizer.sep_token_id:  # 遇到[SEP]则表明response生成结束
@@ -87,7 +92,3 @@ def predict(text, dialog):
     history.append(response)
     reply = tokenizer.convert_ids_to_tokens(response)
     return "".join(reply), history
-
-
-if __name__ == '__main__':
-    predict('你好')

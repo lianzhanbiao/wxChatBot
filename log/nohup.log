@@ -1,6 +1,0 @@
-robot.py:12: DeprecationWarning: enable_session is deprecated.set SESSION_STORAGE to False if you want to disable Session
-  robot = werobot.WeRoBot(token="biao", enable_session=True,
-Bottle v0.12.19 server starting up (using AutoServer())...
-Listening on http://0.0.0.0:8000/
-Hit Ctrl-C to quit.
-
