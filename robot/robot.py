@@ -33,4 +33,4 @@ def r_image(message, session):
 robot.config['HOST'] = '0.0.0.0'
 robot.config['PORT'] = 8000
 
-robot.run(server='gunicorn')
+robot.run()
