@@ -33,6 +33,8 @@ cd wxChatBot
 ```shell
 python -m venv venv
 
+source venv/bin/activate
+
 pip install -r requirements.txt
 
 sh run.sh
