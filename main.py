@@ -1,5 +1,4 @@
 # -*- coding:utf-8 -*-
-import werobot
 from robot import baserobot
 from robot.predict import predict
 # from werobot.utils import to_binary

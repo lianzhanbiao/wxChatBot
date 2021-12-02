@@ -1,8 +1,0 @@
-[2021-12-01 23:49:24 +0800] [2667] [INFO] Starting gunicorn 20.1.0
-[2021-12-01 23:49:24 +0800] [2667] [INFO] Listening at: http://127.0.0.1:8000 (2667)
-[2021-12-01 23:49:24 +0800] [2667] [INFO] Using worker: sync
-[2021-12-01 23:49:24 +0800] [2669] [INFO] Booting worker with pid: 2669
-[2021-12-02 00:05:11 +0800] [6787] [INFO] Starting gunicorn 20.1.0
-[2021-12-02 00:05:11 +0800] [6787] [INFO] Listening at: http://127.0.0.1:8000 (6787)
-[2021-12-02 00:05:11 +0800] [6787] [INFO] Using worker: sync
-[2021-12-02 00:05:11 +0800] [6804] [INFO] Booting worker with pid: 6804

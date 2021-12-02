@@ -24,7 +24,6 @@ class BaseRoBot(object):
     """
     BaseRoBot 是整个应用的核心对象，负责提供 handler 的维护，消息和事件的处理等核心功能。
 
-    :param logger: 用来输出 log 的 logger，如果是 ``None``，将使用 werobot.logger
     :param config: 用来设置的 :class:`werobot.config.Config` 对象 \\
 
     .. note:: 对于下面的参数推荐使用 :class:`~werobot.config.Config` 进行设置，\
@@ -50,7 +49,6 @@ class BaseRoBot(object):
     def __init__(
         self,
         token=None,
-        logger=None,
         enable_session=None,
         session_storage=None,
         config=None,
@@ -60,10 +58,6 @@ class BaseRoBot(object):
         self._handlers = {k: [] for k in self.message_types}
         self._handlers['all'] = []
 
-        if logger is None:
-            import werobot.logger
-            logger = werobot.logger.logger
-        self.logger = logger
 
         if config is None:
             self.config = Config(_DEFAULT_CONFIG)
@@ -262,7 +256,7 @@ class BaseRoBot(object):
                 if reply:
                     return process_function_reply(reply, message=message).render()
         except:
-            self.logger.exception("Catch an exception")
+            pass
 
 
     def check_signature(self, timestamp, nonce, signature):
