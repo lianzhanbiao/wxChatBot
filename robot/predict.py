@@ -8,6 +8,9 @@ import torch.nn.functional as F
 
 PAD = '[PAD]'
 pad_id = 0
+AUDIENCE_MARK = "[AUDI]"
+OWNER_MARK = "[USER]"
+NO_IDEA = "啊哦，我好像突然傻掉了呢，请问问标神看看他怎么回答吧"
 
 device = 'cpu'
 temperature = 1 # 生成的temperature
@@ -53,7 +56,7 @@ def top_k_top_p_filtering(logits, top_k=0, top_p=0.0, filter_value=-float('Inf')
 
 def predict(text, dialog):
     # os.environ["CUDA_VISIBLE_DEVICES"] = "0"
-    tokenizer = BertTokenizerFast(vocab_file=vocab_path, sep_token="[SEP]", pad_token="[PAD]", cls_token="[CLS]")
+    tokenizer = BertTokenizerFast(vocab_file=vocab_path, sep_token="[SEP]", pad_token="[PAD]", cls_token="[CLS]", do_lower_case=False, additional_special_tokens=["[AUDI]","[USER]"])
     model = GPT2LMHeadModel.from_pretrained(model_path)
     model = model.to(device)
     model.eval()
@@ -61,6 +64,7 @@ def predict(text, dialog):
     
     history = dialog
     # text = "你好"
+    text = OWNER_MARK + text
     text_ids = tokenizer.encode(text, add_special_tokens=False)
     history.append(text_ids)
     input_ids = [tokenizer.cls_token_id]  # 每个input以[CLS]为开头
@@ -91,4 +95,8 @@ def predict(text, dialog):
         input_ids = torch.cat((input_ids, next_token.unsqueeze(0)), dim=1)
     history.append(response)
     reply = tokenizer.convert_ids_to_tokens(response)
+    if reply[0] != AUDIENCE_MARK:
+        reply = [NO_IDEA]
+    else:
+        reply = reply[1:]
     return "".join(reply), history
