@@ -30,6 +30,11 @@ git clone git@github.com:lzbcs/wxChatBot.git
 cd wxChatBot
 ```
 在根目录下新建文件夹"gpt2model",把pytorch训练出的语言模型放入文件夹。
+
+我们的模型：
+链接：https://pan.baidu.com/s/1YEiC_oI3jlAPbSWqIaHHyw 
+提取码：ca6g
+
 ```shell
 python -m venv venv
 
