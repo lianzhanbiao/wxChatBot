@@ -4,13 +4,14 @@ import os
 from datetime import datetime
 from transformers import GPT2LMHeadModel
 from transformers import BertTokenizerFast
+from transformers import BertTokenizer
 import torch.nn.functional as F
 
 PAD = '[PAD]'
 pad_id = 0
 AUDIENCE_MARK = "[AUDI]"
 OWNER_MARK = "[USER]"
-NO_IDEA = "啊哦，我好像突然傻掉了呢，请问问标神看看他怎么回答吧"
+NO_IDEA = "啊哦，我好像突然傻掉了呢"
 
 device = 'cpu'
 temperature = 1 # 生成的temperature
