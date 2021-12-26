@@ -7,6 +7,6 @@ loglevel = 'debug'
 logfile = './log/debug.log' #debug日志
 errorlog = './log/error.log' #错误信息日志
 timeout = 90
-daemon = 'true'
+daemon = 'false'
 keepalive = 75 # needs to be longer than the ELB idle timeout
 worker_class = 'gevent'

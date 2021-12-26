@@ -102,8 +102,6 @@
 [CLS]
 [SEP]
 [MASK]
-[AUDI]
-[USER]
 <S>
 <T>
 !
