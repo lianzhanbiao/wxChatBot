@@ -22,33 +22,33 @@ message4 = b'<xml><ToUserName><![CDATA[gh_ac0f2d7a0754]]></ToUserName>\n<FromUse
 
 message5 = b'<xml><ToUserName><![CDATA[gh_ac0f2d7a0754]]></ToUserName>\n<FromUserName><![CDATA[oHfhO5z3E-MuLycOVdreVJ31O3Rg]]></FromUserName>\n<CreateTime>1640583554</CreateTime>\n<MsgType><![CDATA[text]]></MsgType>\n<Content><![CDATA[\xe5\x8f\x98\xe5\xbe\x97\xe6\x9e\x81\xe4\xb8\xba\xe8\xa2\xab\xe5\x8a\xa8\xe6\x88\x91i\xe6\x96\xb9\xe4\xbe\xbf\xe6\x88\x91i\xe5\xaf\x8c\xe5\x86\x9c\xe8\xaf\xb7\xe9\x97\xae\xe4\xbd\xa0\xe4\xbb\xac\xe5\x90\x83\xe4\xba\x86\xe5\x90\x97\xe9\x99\xa4\xe4\xba\x86\xe9\x82\xa3\xe4\xbd\x8d\xe5\xa6\x87\xe5\xa5\xb3\xe8\x8d\x89\xe8\x8e\x93\xe5\x91\xb3\xe8\x8d\x89\xe8\x8e\x93\xe5\x91\xb3\xe7\xa2\xb0\xe9\x9d\xa2vowenvonweoivnowievpoewocd\xe9\x83\xbd\xe6\xb2\xa1\xe6\x88\x91\xe6\xb4\xbe\xe5\xaf\xb9\xe5\xa5\xb3\xe7\x8e\x8b\xe4\xbd\x9b\xe5\x8d\x97\xe4\xb8\xba\xe5\x93\xa6\xe4\xbd\xa0\xe4\xbb\x8ei\xe6\x96\x87\xe8\xbe\x9e\xe5\x93\xa6\xe9\x97\xae]]></Content>\n<MsgId>23487508425376561</MsgId>\n</xml>'
 
-def test_message1(client): # 测试正常交流
+def test_message_normal(client): # 测试正常交流
     rv = client.post('/weixin', data=message1)
     xml = ET.fromstring(rv.data)
     result = xml.find('Content').text
     assert is_valid_text(result)
 
-def test_message2(client): # 测试紧急避险
+def test_message_emergency(client): # 测试紧急避险
     rv = client.post('/weixin', data=message2)
     xml = ET.fromstring(rv.data)
     result = xml.find('Content').text
     assert is_valid_text(result)
     assert result == EMERGENCY
 
-def test_message3(client): # 测试语音
+def test_messags_voice(client): # 测试语音
     rv = client.post('/weixin', data=message3)
     xml = ET.fromstring(rv.data)
     result = xml.find('Content').text
     assert is_valid_text(result)
 
-def test_message4(client): # 测试表情包
+def test_message_emoji(client): # 测试表情包
     rv = client.post('/weixin', data=message4)
     xml = ET.fromstring(rv.data)
     result = xml.find('Content').text
     assert is_valid_text(result)
     assert result == NOT_SUPPORT
 
-def test_message5(client): # 测试非法输入
+def test_message_abnormal(client): # 测试非法输入
     rv = client.post('/weixin', data=message5)
     xml = ET.fromstring(rv.data)
     result = xml.find('Content').text
