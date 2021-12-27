@@ -3,3 +3,4 @@ gpt2model/
 __pycache__/
 app.pid
 log/
+.pytest_cache/

@@ -32,8 +32,8 @@ cd wxChatBot
 在根目录下新建文件夹"gpt2model",把pytorch训练出的语言模型放入文件夹。
 
 我们的模型：
-链接：https://pan.baidu.com/s/1YEiC_oI3jlAPbSWqIaHHyw 
-提取码：ca6g
+链接：https://pan.baidu.com/s/15IltH_CFeouu2P09vX0Djg 
+提取码：aua3
 
 ```shell
 python -m venv venv
